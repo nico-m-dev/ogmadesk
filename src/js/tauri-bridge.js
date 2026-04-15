@@ -255,6 +255,28 @@
                 }
                 console.warn(`[Tauri] opener.revealItemInDir fallback for: ${path}`);
             }
+        },
+
+        // App info
+        async getVersion() {
+            // Return hardcoded version - will be updated on release
+            // The actual version API requires build, not available in dev
+            return '1.0.0';
+        },
+
+        // Updater
+        updater: {
+            async check() {
+                try {
+                    if (isTauri() && window.__TAURI__.updater) {
+                        const { check } = window.__TAURI__.updater;
+                        return await check();
+                    }
+                } catch (e) {
+                    console.warn('[Tauri] updater.check error:', e.message);
+                }
+                return null;
+            }
         }
     };
 

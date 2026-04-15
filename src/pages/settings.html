@@ -12,7 +12,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-zinc-200">Current Version</p>
-                    <p class="text-xs text-zinc-400">Version 0.1.0-alpha</p>
+                    <p class="text-xs text-zinc-400" id="app-version">Loading...</p>
                 </div>
                 <div class="flex space-x-2">
                     <button id="btn-check-updates" class="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/20 rounded-md text-sm font-medium transition-colors">
@@ -40,14 +40,41 @@
 </div>
 
 <script>
-    (function() {
+    (async function() {
         const btn = document.getElementById('btn-check-updates');
         if (btn) {
-            btn.addEventListener('click', () => {
-                if (window.App && window.App.showToast) {
-                    window.App.showToast('You are currently using the latest version.', 'success');
-                } else {
-                    alert('You are currently using the latest version.');
+            btn.addEventListener('click', async () => {
+                btn.disabled = true;
+                btn.textContent = 'Checking...';
+                
+                try {
+                    const update = await window.TauriBridge?.updater?.check();
+                    
+                    if (update) {
+                        if (window.App?.showToast) {
+                            window.App.showToast(
+                                `Update available: v${update.version}. Downloading...`, 
+                                'info'
+                            );
+                        }
+                        await update.downloadAndInstall();
+                    } else {
+                        if (window.App?.showToast) {
+                            window.App.showToast('You are currently using the latest version.', 'success');
+                        } else {
+                            alert('You are currently using the latest version.');
+                        }
+                    }
+                } catch (e) {
+                    console.error('Update check failed:', e);
+                    if (window.App?.showToast) {
+                        window.App.showToast('Failed to check for updates: ' + e.message, 'error');
+                    } else {
+                        alert('Failed to check for updates: ' + e.message);
+                    }
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Check for Updates';
                 }
             });
         }

@@ -26,6 +26,7 @@
     "@tauri-apps/plugin-fs": "^2.4.5",
     "@tauri-apps/plugin-http": "^2.5.7",
     "@tauri-apps/plugin-store": "^2.4.2",
+    "@tauri-apps/plugin-updater": "^2.10.1",
     "apexcharts": "^5.10.4",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.6.205"

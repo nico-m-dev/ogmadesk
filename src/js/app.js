@@ -29,6 +29,23 @@ const App = {
         await this.initWindowSize();
     },
 
+    async setVersionInUI() {
+        try {
+            const version = await window.TauriBridge?.getVersion();
+            const elements = document.querySelectorAll('#app-version');
+            if (elements.length === 0) {
+                console.log('[App] No version elements found yet');
+                return;
+            }
+            elements.forEach(el => {
+                el.textContent = 'Version ' + version;
+            });
+            console.log('[App] Version set:', version);
+        } catch (e) {
+            console.warn('[App] Could not get version:', e);
+        }
+    },
+
     async initWindowSize() {
         let saveTimeout = null;
 
@@ -206,6 +223,9 @@ const App = {
 
             // Update current page after successful load
             this.currentPage = pageName;
+
+            // Update version in UI after page load
+            setTimeout(() => this.setVersionInUI(), 50);
 
             // Global drop prevention to ensure dropping images outside textareas doesn't redirect the whole webview page
             window.addEventListener('dragover', e => e.preventDefault(), false);
