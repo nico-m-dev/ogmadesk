@@ -1,0 +1,85 @@
+<!-- =====================================================================
+     File Manager — Main Fragment
+     Loaded dynamically by app.js into #main-content.
+     ===================================================================== -->
+
+<div id="fm-root" class="flex flex-col h-full animate-[fade-enter_300ms_ease_forwards]">
+    <!-- Main Container -->
+    <div id="fm-main" class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <div class="fm-sidebar w-[220px] bg-zinc-900/40 border-r border-zinc-700/40 flex flex-col py-5 px-3 shrink-0">
+            <div class="text-[0.7rem] font-semibold uppercase tracking-[0.05em] text-zinc-500 mb-4 pl-3">Folders</div>
+            <div class="fm-nav-item flex items-center gap-3 py-2.5 px-3 rounded-lg text-zinc-400 text-[0.85rem] font-medium cursor-pointer transition-colors mb-1 hover:bg-zinc-800/60 hover:text-zinc-200" data-folder="Assets">
+                <i class="ph ph-image text-[1.1rem]"></i>
+                <span>Assets</span>
+            </div>
+            <div class="fm-nav-item flex items-center gap-3 py-2.5 px-3 rounded-lg text-zinc-400 text-[0.85rem] font-medium cursor-pointer transition-colors mb-1 hover:bg-zinc-800/60 hover:text-zinc-200" data-folder="Files">
+                <i class="ph ph-files text-[1.1rem]"></i>
+                <span>Files</span>
+            </div>
+            <div class="fm-nav-item flex items-center gap-3 py-2.5 px-3 rounded-lg text-zinc-400 text-[0.85rem] font-medium cursor-pointer transition-colors mb-1 hover:bg-zinc-800/60 hover:text-zinc-200" data-folder="PDFs">
+                <i class="ph ph-file-pdf text-[1.1rem]"></i>
+                <span>PDFs</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="fm-content flex-1 flex flex-col bg-zinc-900/20 overflow-hidden">
+            <div class="fm-toolbar flex items-center gap-2 py-3 px-5 bg-zinc-950 border-b border-zinc-700/40">
+                <div class="text-[0.9rem] font-semibold text-zinc-200 mr-4" id="fm-current-folder-label">Assets</div>
+                
+                <button class="fm-btn flex items-center gap-1.5 py-1.5 px-3 rounded-md text-[0.75rem] font-medium cursor-pointer border border-transparent bg-transparent text-zinc-400 transition-colors hover:not-disabled:bg-zinc-800/80 hover:not-disabled:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed" id="fm-btn-refresh" title="Refresh list">
+                    <i class="ph ph-arrows-clockwise"></i> Refresh
+                </button>
+
+                <div class="w-px h-5 bg-zinc-700/40 mx-2"></div>
+
+                <button class="fm-btn flex items-center gap-1.5 py-1.5 px-3 rounded-md text-[0.75rem] font-medium cursor-pointer border border-transparent bg-transparent text-zinc-400 transition-colors hover:not-disabled:bg-zinc-800/80 hover:not-disabled:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed" id="fm-btn-rename" disabled title="Rename selected file">
+                    <i class="ph ph-pencil-simple"></i> Rename
+                </button>
+                <button class="fm-btn danger flex items-center gap-1.5 py-1.5 px-3 rounded-md text-[0.75rem] font-medium cursor-pointer border border-transparent bg-transparent text-zinc-400 transition-colors hover:not-disabled:bg-red-600/15 hover:not-disabled:text-red-300 disabled:opacity-40 disabled:cursor-not-allowed" id="fm-btn-delete" disabled title="Delete selected file">
+                    <i class="ph ph-trash"></i> Delete
+                </button>
+
+                <div class="ml-auto">
+                    <button class="fm-btn flex items-center gap-1.5 py-1.5 px-3 rounded-md text-[0.75rem] font-medium cursor-pointer border border-transparent bg-transparent text-zinc-400 transition-colors hover:not-disabled:bg-zinc-800/80 hover:not-disabled:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed" id="fm-btn-explorer" title="Open in OS Explorer">
+                        <i class="ph ph-folder-open"></i> Show in Explorer
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 p-5 overflow-y-auto custom-scrollbar">
+                <div class="w-full bg-zinc-900/40 border border-zinc-700/40 rounded-xl overflow-hidden">
+                    <table class="w-full border-collapse text-[0.8rem]">
+                        <thead>
+                            <tr>
+                                <th class="text-left py-3 px-4 bg-zinc-950 text-zinc-500 font-semibold uppercase tracking-[0.03em] text-[0.65rem] border-b border-zinc-700/40 w-1/2">Name</th>
+                                <th class="text-left py-3 px-4 bg-zinc-950 text-zinc-500 font-semibold uppercase tracking-[0.03em] text-[0.65rem] border-b border-zinc-700/40 w-1/5">Size</th>
+                                <th class="text-left py-3 px-4 bg-zinc-950 text-zinc-500 font-semibold uppercase tracking-[0.03em] text-[0.65rem] border-b border-zinc-700/40 w-[30%]">Last Modified</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fm-file-list">
+                            <!-- Files rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="fm-empty" class="hidden flex-col items-center justify-center py-16 px-8 text-zinc-500 text-center">
+                    <i class="ph ph-folder-open text-5xl mb-4 opacity-50"></i>
+                    <p>This folder is empty.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODULE SCRIPTS -->
+<script src="js/tools/file-manager/file-manager.js"></script>
+<script>
+    requestAnimationFrame(() => {
+        if (window.FileManager) {
+            window.FileManager.init();
+        }
+    });
+</script>

@@ -1,0 +1,211 @@
+<div
+    class="fixed inset-0 bg-zinc-950/80 backdrop-blur-xl z-50 flex items-center justify-center p-6 animate-[fade-enter_400ms_ease_out]">
+    <div
+        class="max-w-2xl w-full bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        <!-- Sidebar/Promo Area -->
+        <div class="md:w-1/3 bg-zinc-900 p-8 text-white flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-lg bg-zinc-950 flex items-center justify-center mb-4 shadow-inner">
+                    <img src="lib/logo.png" class="w-8 h-8 object-contain">
+                </div>
+                <h2 class="text-2xl font-bold mb-2 leading-tight">Welcome to OgmaDesk</h2>
+                <p class="text-white/80 text-sm">Your private toolbox for local productivity.</p>
+            </div>
+            <div class="mt-8 text-xs text-white/60">
+                <p>Data is stored 100% locally on your machine.</p>
+            </div>
+        </div>
+
+        <!-- Main Form Area -->
+        <div class="md:w-2/3 p-8 flex flex-col max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <!-- Quick Mode (Now at the top) -->
+            <button id="ws-btn-quick"
+                class="w-full p-4 mb-6 rounded-xl border border-dashed border-amber-500/50 bg-amber-500/5 hover:bg-amber-500/10 transition-all flex items-center group">
+                <div
+                    class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                    <i class="ph-fill ph-lightning text-amber-400"></i>
+                </div>
+                <div class="text-left">
+                    <div class="font-bold text-amber-100 group-hover:text-white transition-colors">Use Basic Tools
+                        (Quick
+                        Mode)</div>
+                    <div class="text-xs text-amber-500/70 uppercase tracking-wider font-bold">No Workspace required
+                    </div>
+                </div>
+                <i
+                    class="ph ph-arrow-right ml-auto text-amber-500/50 group-hover:text-amber-400 group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <span class="w-8 h-1 bg-amber-500 rounded-full mr-3"></span>
+                Setup your Workspace
+            </h3>
+
+            <div class="space-y-6">
+                <!-- Create New -->
+                <div
+                    class="p-5 rounded-xl bg-zinc-800/50 border border-zinc-700 hover:border-amber-500/30 transition-all">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center mr-3">
+                            <i class="ph ph-plus-circle text-amber-400"></i>
+                        </div>
+                        <span class="font-semibold text-zinc-100">Create New Workspace</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex flex-col space-y-1">
+                            <label class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Workspace
+                                Name</label>
+                            <input type="text" id="ws-new-name" placeholder="e.g. My Private Data"
+                                class="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-500 transition-colors text-white">
+                        </div>
+
+                        <div class="flex flex-col space-y-1">
+                            <label
+                                class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Location</label>
+                            <div class="flex space-x-2">
+                                <button id="ws-btn-select-folder"
+                                    class="flex-1 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-400 flex items-center transition-all truncate text-left">
+                                    <i class="ph ph-folder text-lg mr-2 shrink-0"></i>
+                                    <span id="ws-selected-path" class="truncate italic overflow-hidden">No folder
+                                        selected...</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button id="ws-btn-create-final"
+                            class="w-full mt-4 py-2.5 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-600 text-white rounded-lg text-sm font-bold transition-all shadow-lg shadow-amber-500/20"
+                            disabled>
+                            Create Workspace
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Open Existing & Saved Workspaces -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between px-1">
+                        <span class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Open
+                            Workspace</span>
+                        <button id="ws-btn-browse"
+                            class="text-[10px] uppercase tracking-widest text-amber-500 font-bold hover:text-amber-400 transition-colors flex items-center">
+                            <i class="ph ph-magnifying-glass mr-1"></i> Browse Files
+                        </button>
+                    </div>
+
+                    <!-- Saved Workspaces List -->
+                    <div id="ws-saved-list" class="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                        <!-- Populated via JS -->
+                        <div class="text-xs text-zinc-600 italic py-2 text-center border border-zinc-800 rounded-lg">
+                            No saved workspaces yet.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        let selectedPath = null;
+
+        const nameInput = document.getElementById('ws-new-name');
+        const selectFolderBtn = document.getElementById('ws-btn-select-folder');
+        const pathLabel = document.getElementById('ws-selected-path');
+        const finalCreateBtn = document.getElementById('ws-btn-create-final');
+
+        const browseBtn = document.getElementById('ws-btn-browse');
+        const quickBtn = document.getElementById('ws-btn-quick');
+        const savedList = document.getElementById('ws-saved-list');
+
+        // Render saved workspaces in modal
+        function renderSavedWorkspaces() {
+            if (!savedList || !window.WorkspaceManager) return;
+
+            const workspaces = window.WorkspaceManager.recent;
+            if (workspaces.length === 0) return;
+
+            savedList.innerHTML = '';
+            workspaces.forEach(ws => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-lg border border-zinc-800 bg-zinc-900/50 hover:border-zinc-600 hover:bg-zinc-800 transition-all flex items-center group text-left';
+                btn.innerHTML = `
+                    <div class="w-7 h-7 rounded bg-zinc-800 flex items-center justify-center mr-3 group-hover:bg-amber-500/10 transition-colors">
+                        <i class="ph ph-folder text-zinc-500 group-hover:text-amber-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-semibold text-zinc-200 truncate">${ws.name}</div>
+                        <div class="text-[10px] text-zinc-500 truncate">${ws.path}</div>
+                    </div>
+                    ${!ws.exists ? '<span class="text-[10px] bg-red-500/10 text-red-500 px-1.5 py-0.5 rounded border border-red-500/20 ml-2">Missing</span>' : ''}
+                    <i class="ph ph-caret-right text-zinc-600 group-hover:text-amber-400 ml-2 transition-colors"></i>
+                `;
+                btn.addEventListener('click', () => {
+                    window.WorkspaceManager.openWorkspace(ws.path);
+                });
+                savedList.appendChild(btn);
+            });
+        }
+
+        renderSavedWorkspaces();
+
+        function updateUI() {
+            const name = nameInput.value.trim();
+            finalCreateBtn.disabled = !(name && selectedPath);
+        }
+
+        nameInput.addEventListener('input', updateUI);
+        nameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !finalCreateBtn.disabled) {
+                finalCreateBtn.click();
+            }
+        });
+
+        if (selectFolderBtn) {
+            selectFolderBtn.addEventListener('click', async () => {
+                const selected = await window.TauriBridge.dialog.open({
+                    directory: true,
+                    multiple: false,
+                    title: "Select Parent Folder for Workspace"
+                });
+
+                if (selected) {
+                    selectedPath = selected;
+                    pathLabel.textContent = selected;
+                    pathLabel.classList.remove('italic', 'text-zinc-500');
+                    pathLabel.classList.add('text-zinc-200');
+                    updateUI();
+                }
+            });
+        }
+
+        if (finalCreateBtn) {
+            finalCreateBtn.addEventListener('click', async () => {
+                const name = nameInput.value.trim();
+                if (name && selectedPath) {
+                    await window.WorkspaceManager.createWorkspace(name, selectedPath);
+                }
+            });
+        }
+
+        if (browseBtn) {
+            browseBtn.addEventListener('click', async () => {
+                const selected = await window.TauriBridge.dialog.open({
+                    directory: true,
+                    multiple: false,
+                    title: "Open OgmaDesk Workspace"
+                });
+
+                if (selected) {
+                    await window.WorkspaceManager.openWorkspace(selected);
+                }
+            });
+        }
+
+        if (quickBtn) {
+            quickBtn.addEventListener('click', () => {
+                window.WorkspaceManager.quickMode();
+            });
+        }
+    })();
+</script>

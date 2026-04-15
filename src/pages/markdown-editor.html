@@ -1,0 +1,184 @@
+<!-- =====================================================================
+     Markdown Editor — Main Fragment
+     Loaded dynamically by app.js into #main-content.
+     Libraries loaded inline via relative paths.
+     ===================================================================== -->
+
+<!-- Local Libraries -->
+<script src="/lib/marked/marked.min.js"></script>
+<script src="/lib/dompurify/purify.min.js"></script>
+
+<!-- Scoped Styles -->
+<!-- Styles migrated to input.css -->
+
+<!-- =====================================================================
+     ROOT CONTAINER
+     ===================================================================== -->
+<div id="md-root" class="flex flex-col h-full gap-0 animate-[fade-enter_300ms_ease_forwards]">
+
+    <!-- ── Top Toolbar ──────────────────────────────────────────────────── -->
+    <div class="md-toolbar">
+        <!-- File Actions -->
+        <div class="md-toolbar-group">
+            <button class="md-btn" id="md-btn-new" title="New File (Ctrl+N)">
+                <i class="ph ph-file-plus text-base"></i> New
+            </button>
+            <button class="md-btn primary hidden" id="md-btn-save" title="Save (Ctrl+S)">
+                <i class="ph ph-floppy-disk text-base"></i> Save
+            </button>
+            <button class="md-btn hidden" id="md-btn-save-new" title="Save as New (Ctrl+Shift+S)">
+                <i class="ph ph-plus-square text-base"></i> Save as New
+            </button>
+            <button class="md-btn" id="md-btn-open" title="Import .md from PC (Ctrl+O)">
+                <i class="ph ph-download-simple text-base"></i> Import .md
+            </button>
+            <button class="md-btn" id="md-btn-saveas" title="Export .md to PC (Ctrl+Shift+S)">
+                <i class="ph ph-upload-simple text-base"></i> Export .md
+            </button>
+        </div>
+
+        <!-- View Toggles -->
+        <div class="md-toolbar-group ml-auto">
+            <span class="text-[0.65em] text-zinc-500 uppercase tracking-wider mr-1">View</span>
+            <button class="md-btn" id="md-view-editor" title="Editor Only">
+                <i class="ph ph-terminal-window text-base"></i>
+            </button>
+            <button class="md-btn active" id="md-view-split" title="Split View">
+                <i class="ph ph-columns text-base"></i>
+            </button>
+            <button class="md-btn" id="md-view-preview" title="Preview Only">
+                <i class="ph ph-article text-base"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Body ─────────────────────────────────────────────────────── -->
+    <div class="md-body">
+
+        <!-- Left Sidebar (Workspace Mode Only) -->
+        <aside class="md-sidebar" id="md-sidebar">
+            <div class="md-sidebar-section">
+                <p class="md-sidebar-title">
+                    <i class="ph ph-folder text-amber-600 text-sm"></i> /Markdown/
+                </p>
+                <div id="md-file-tree" class="space-y-1 mt-2">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <div class="md-workspace">
+
+            <!-- Editor Pane -->
+            <div class="md-pane" id="md-editor-pane">
+                <!-- Formatting Bar -->
+                <div class="md-format-bar">
+                    <div class="md-format-btn" id="md-fmt-bold" title="Bold (Ctrl+B)"><i class="ph ph-text-b"></i></div>
+                    <div class="md-format-btn" id="md-fmt-italic" title="Italic (Ctrl+I)"><i
+                            class="ph ph-text-italic"></i></div>
+                    <div class="md-format-btn" id="md-fmt-strikethrough" title="Strikethrough"><i
+                            class="ph ph-text-strikethrough"></i></div>
+                    <div class="w-[1px] h-[16px] bg-zinc-700 mx-1 self-center"></div>
+                    <div class="md-format-btn" id="md-fmt-h1" title="Heading 1"><i class="ph ph-text-h-one"></i></div>
+                    <div class="md-format-btn" id="md-fmt-h2" title="Heading 2"><i class="ph ph-text-h-two"></i></div>
+                    <div class="md-format-btn" id="md-fmt-h3" title="Heading 3"><i class="ph ph-text-h-three"></i></div>
+                    <div class="w-[1px] h-[16px] bg-zinc-700 mx-1 self-center"></div>
+                    <div class="md-format-btn" id="md-fmt-quote" title="Quote"><i class="ph ph-quotes"></i></div>
+                    <div class="md-format-btn" id="md-fmt-code" title="Code Block"><i class="ph ph-code"></i></div>
+                    <div class="w-[1px] h-[16px] bg-zinc-700 mx-1 self-center"></div>
+                    <div class="md-format-btn" id="md-fmt-task" title="Task List"><i class="ph ph-check-square"></i>
+                    </div>
+                    <div class="md-format-btn" id="md-fmt-ul" title="Unordered List"><i class="ph ph-list-bullets"></i>
+                    </div>
+                    <div class="md-format-btn" id="md-fmt-ol" title="Ordered List"><i class="ph ph-list-numbers"></i>
+                    </div>
+                    <div class="w-[1px] h-[16px] bg-zinc-700 mx-1 self-center"></div>
+                    <div class="md-format-btn" id="md-fmt-link" title="Link (Ctrl+K)"><i class="ph ph-link"></i></div>
+                    <div class="w-[1px] h-[16px] bg-zinc-700 mx-1 self-center ml-auto"></div>
+                    <div class="md-format-btn" id="md-fmt-undo" title="Undo (Ctrl+Z)"><i
+                            class="ph ph-arrow-u-up-left"></i></div>
+                    <div class="md-format-btn" id="md-fmt-redo" title="Redo (Ctrl+Y)"><i
+                            class="ph ph-arrow-u-up-right"></i></div>
+                </div>
+                <textarea class="md-textarea" id="md-textarea" placeholder="Start typing markdown here..."
+                    spellcheck="false"></textarea>
+            </div>
+
+            <!-- Preview Pane -->
+            <div class="md-pane" id="md-preview-pane">
+                <div class="md-preview-header">Live Preview</div>
+                <div class="md-preview-content" id="md-preview-content">
+                    <!-- Rendered output -->
+                </div>
+            </div>
+
+        </div> <!-- end md-workspace -->
+
+    </div> <!-- end md-body -->
+
+    <!-- Status bar -->
+    <div class="md-statusbar">
+        <span id="md-status-filename" class="text-amber-600 font-medium mr-3">untitled.md</span>
+        <span><span id="md-word-count">0</span> words</span>
+        <span class="mx-2 text-zinc-700">|</span>
+        <span id="md-status-save" class="text-zinc-500">Unsaved changes</span>
+    </div>
+
+</div>
+
+<!-- Context Menu for File Explorer -->
+<div id="md-context-menu"
+    class="hidden fixed z-50 w-48 bg-zinc-800 border border-zinc-700 rounded-md shadow-xl py-1 text-sm text-zinc-300">
+    <button id="md-ctx-newfile"
+        class="w-full text-left px-4 py-2 hover:bg-amber-600/20 hover:text-amber-400 flex items-center gap-2"><i
+            class="ph ph-file-plus"></i> New File</button>
+    <button id="md-ctx-newfolder"
+        class="w-full text-left px-4 py-2 hover:bg-amber-600/20 hover:text-amber-400 flex items-center gap-2"><i
+            class="ph ph-folder-plus"></i> New Folder</button>
+    <div class="h-px bg-zinc-700 my-1"></div>
+    <button id="md-ctx-rename"
+        class="w-full text-left px-4 py-2 hover:bg-zinc-700 hover:text-white flex items-center gap-2"><i
+            class="ph ph-pencil-simple"></i> Rename</button>
+    <button id="md-ctx-delete"
+        class="w-full text-left px-4 py-2 hover:bg-red-500/20 hover:text-red-400 flex items-center gap-2"><i
+            class="ph ph-trash"></i> Delete</button>
+</div>
+
+<!-- Image Insert Modal -->
+<div id="md-image-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-enter">
+    <div
+        class="glass-panel w-[500px] flex flex-col shadow-2xl rounded-xl overflow-hidden bg-zinc-900 border border-zinc-700">
+        <div class="flex items-center px-4 py-3 border-b border-zinc-800 bg-zinc-950">
+            <i class="ph ph-image text-amber-400 text-xl mr-3"></i>
+            <h3 class="font-semibold text-white">Insert Image</h3>
+            <button id="md-img-close" class="ml-auto text-zinc-500 hover:text-white transition-colors"><i
+                    class="ph ph-x text-lg"></i></button>
+        </div>
+        <div class="p-4 bg-zinc-900 flex-1 flex flex-col gap-4">
+            <div id="md-img-gallery" class="grid grid-cols-3 gap-3 overflow-y-auto max-h-[300px] p-1 custom-scrollbar">
+                <!-- Populated dynamically -->
+            </div>
+            <div id="md-img-empty" class="hidden text-center text-zinc-500 py-8 italic text-sm">
+                No images in Workspace /Assets/
+            </div>
+            <button id="md-img-upload"
+                class="w-full py-2.5 rounded border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium transition-colors flex justify-center items-center gap-2">
+                <i class="ph ph-upload-simple"></i> Select Image from Computer
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODULE SCRIPTS -->
+<script src="js/tools/markdown/markdown-fs.js"></script>
+<script src="js/tools/markdown/markdown-ui.js"></script>
+<script src="js/tools/markdown/markdown-editor.js"></script>
+<script>
+    requestAnimationFrame(() => {
+        if (window.MarkdownEditor) {
+            window.MarkdownEditor.init();
+        }
+    });
+</script>

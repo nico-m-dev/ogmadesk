@@ -1,0 +1,325 @@
+<!-- =====================================================================
+     PDF Suite — Main Fragment
+     Loaded dynamically by app.js into #main-content.
+     Libraries loaded inline via CDN (pdf-lib, pdf.js worker-less build).
+     ===================================================================== -->
+
+<!-- Local Libraries (for offline support) -->
+<script src="/lib/pdf-lib/pdf-lib.min.js"></script>
+<script src="/lib/pdfjs/pdf.min.js"></script>
+<script src="/lib/sortable.min.js"></script>
+<script>
+    // Configure pdf.js worker (local file)
+    if (window.pdfjsLib) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'lib/pdfjs/pdf.worker.min.js';
+    }
+</script>
+
+<!-- Local Libraries (for offline support) -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     ROOT CONTAINER
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="pdf-suite-root" class="flex flex-col h-full gap-0 animate-[fade-enter_300ms_ease_forwards]">
+
+    <!-- ── Tab Bar ──────────────────────────────────────────────────── -->
+    <div class="pdf-tab-bar">
+        <button class="pdf-tab-btn pdf-tab-active" data-tab="merge" id="tab-merge">
+            <i class="ph ph-git-merge text-base"></i> Merge
+        </button>
+        <button class="pdf-tab-btn pdf-tab-inactive" data-tab="split" id="tab-split">
+            <i class="ph ph-scissors text-base"></i> Split
+        </button>
+        <button class="pdf-tab-btn pdf-tab-inactive" data-tab="edit" id="tab-edit">
+            <i class="ph ph-pencil-simple text-base"></i> Basic Edit
+        </button>
+
+        <!-- Spacer -->
+        <div class="ml-auto"></div>
+    </div>
+
+    <!-- ── Body ─────────────────────────────────────────────────────── -->
+    <div class="pdf-body flex flex-1 overflow-hidden min-h-0">
+
+
+        <!-- ════════════════════════════════════════════════════════════
+             MERGE TAB PANEL
+             ════════════════════════════════════════════════════════════ -->
+        <div class="pdf-tab-panel flex flex-1 min-w-0 overflow-hidden" data-tab-panel="merge">
+
+            <!-- Workspace -->
+            <div class="pdf-workspace relative flex-1 overflow-y-auto p-5 flex flex-col gap-4 min-w-0 custom-scrollbar" id="merge-dropzone">
+
+                <!-- Loading overlay -->
+                <div id="merge-loading" class="pdf-loading-overlay absolute inset-0 bg-zinc-900/90 hidden items-center justify-center z-20" style="display: none;"></param>
+                    <div class="pdf-loading-content flex flex-col items-center gap-2">
+                        <i class="ph ph-spinner-gap animate-spin text-4xl text-amber-500"></i>
+                        <p id="merge-loading-text" class="text-zinc-300 mt-3">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Stats strip -->
+                <div class="pdf-stats-strip flex items-center gap-4 py-2 px-3 bg-zinc-950 border border-zinc-700/50 rounded-lg shrink-0" id="merge-stats">
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-files text-amber-500 text-[0.95rem]"></i><span>Files: <strong
+                                id="merge-file-count">0</strong></span></span>
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-stack text-amber-500 text-[0.95rem]"></i><span>Pages: <strong
+                                id="merge-page-count">0</strong></span></span>
+                    <button id="merge-clear-btn"
+                        class="ml-auto hidden text-xs text-zinc-500 hover:text-red-400 flex items-center gap-1 transition-colors">
+                        <i class="ph ph-trash text-sm"></i> Clear all
+                    </button>
+                </div>
+
+                <!-- Empty state -->
+                <div id="merge-empty" class="pdf-empty-state flex-1 flex flex-col items-center justify-center gap-3 text-zinc-500 border-2 border-dashed border-zinc-700/50 rounded-2xl p-12 text-center transition-colors min-h-[280px]">
+                    <i class="ph ph-file-arrow-up text-5xl"></i>
+                    <p class="text-lg font-semibold text-zinc-400">Drop PDFs here</p>
+                    <p class="text-sm">or use <strong class="text-amber-500">Add Files</strong> in the sidebar</p>
+                    <p class="text-xs text-zinc-600">Select 2 or more PDF files to merge them into one document</p>
+                </div>
+
+                <!-- File list -->
+                <div id="merge-file-list" class="flex flex-wrap gap-3 p-1"></div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="pdf-sidebar w-[15.5rem] shrink-0 border-l border-zinc-700/60 bg-zinc-900/40 overflow-y-auto flex flex-col gap-0 custom-scrollbar">
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Add Files</p>
+                    <button id="merge-add-btn" class="pdf-action-btn primary">
+                        <i class="ph ph-plus-circle text-base"></i> Add PDF Files…
+                    </button>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Output</p>
+                    <button id="merge-btn" class="pdf-action-btn primary" disabled>
+                        <i class="ph ph-git-merge text-base"></i> Merge PDFs
+                    </button>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Tips</p>
+                    <ul class="text-xs text-zinc-500 space-y-1.5 leading-relaxed">
+                        <li><i class="ph ph-arrows-down-up text-blue-400 mr-1"></i>Drag cards to reorder</li>
+                        <li><i class="ph ph-x-circle text-red-400 mr-1"></i>Hover a card to remove it</li>
+                        <li><i class="ph ph-folder-open text-green-400 mr-1"></i>Drop files from Explorer</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+
+        <!-- ════════════════════════════════════════════════════════════
+             SPLIT TAB PANEL
+             ════════════════════════════════════════════════════════════ -->
+        <div class="pdf-tab-panel hidden flex flex-1 min-w-0 overflow-hidden" data-tab-panel="split">
+
+            <!-- Workspace -->
+            <div class="pdf-workspace relative flex-1 overflow-y-auto p-5 flex flex-col gap-4 min-w-0 custom-scrollbar">
+
+                <!-- Loading overlay -->
+                <div id="split-loading" class="pdf-loading-overlay absolute inset-0 bg-zinc-900/90 hidden items-center justify-center z-20" style="display: none;">
+                    <div class="pdf-loading-content flex flex-col items-center gap-2">
+                        <i class="ph ph-spinner-gap animate-spin text-4xl text-amber-500"></i>
+                        <p id="split-loading-text" class="text-zinc-300 mt-3">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Stats strip -->
+                <div class="pdf-stats-strip flex items-center gap-4 py-2 px-3 bg-zinc-950 border border-zinc-700/50 rounded-lg shrink-0" id="split-stats">
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-file-pdf text-amber-500 text-[0.95rem]"></i><span id="split-filename"
+                            class="truncate max-w-[200px]">No file loaded</span></span>
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-stack text-amber-500 text-[0.95rem]"></i><strong id="split-page-count">—</strong></span>
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-check-square text-amber-500 text-[0.95rem]"></i><strong id="split-sel-count">0
+                            selected</strong></span>
+                    <button id="split-clear-btn"
+                        class="ml-auto hidden text-xs text-zinc-500 hover:text-red-400 flex items-center gap-1 transition-colors">
+                        <i class="ph ph-x text-sm"></i> Close
+                    </button>
+                </div>
+
+                <!-- Empty state -->
+                <div id="split-empty" class="pdf-empty-state flex-1 flex flex-col items-center justify-center gap-3 text-zinc-500 border-2 border-dashed border-zinc-700/50 rounded-2xl p-12 text-center transition-colors min-h-[280px]">
+                    <i class="ph ph-scissors text-5xl"></i>
+                    <p class="text-lg font-semibold text-zinc-400">Load a PDF to split</p>
+                    <p class="text-sm">Use <strong class="text-amber-500">Load PDF</strong> in the sidebar</p>
+                    <p class="text-xs text-zinc-600">View all pages, reorder, remove, or split into separate files by
+                        range</p>
+                </div>
+
+                <!-- Page grid (hidden until file loaded) -->
+                <div id="split-panel" class="hidden flex-1 flex flex-col gap-3 min-h-0">
+                    <div id="split-page-grid" class="pdf-page-grid flex flex-wrap gap-2.5 p-1 content-start flex-1 overflow-y-auto custom-scrollbar"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="pdf-sidebar w-[15.5rem] shrink-0 border-l border-zinc-700/60 bg-zinc-900/40 overflow-y-auto flex flex-col gap-0 custom-scrollbar">
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Load</p>
+                    <button id="split-load-btn" class="pdf-action-btn primary">
+                        <i class="ph ph-folder-open text-base"></i> Load PDF…
+                    </button>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Page Actions</p>
+                    <button id="split-delete-sel" class="pdf-action-btn danger" disabled>
+                        <i class="ph ph-trash text-base"></i> Delete Selected
+                    </button>
+                    <button id="split-save-order" class="pdf-action-btn" disabled>
+                        <i class="ph ph-floppy-disk text-base"></i> Save Reordered
+                    </button>
+                    <button id="split-save-selected" class="pdf-action-btn" disabled>
+                        <i class="ph ph-file-pdf text-base"></i> Save Selected
+                    </button>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Tips</p>
+                    <ul class="text-xs text-zinc-500 space-y-1.5 leading-relaxed">
+                        <li><i class="ph ph-hand-tap text-amber-500 mr-1"></i>Click page to select</li>
+                        <li><i class="ph ph-arrows-down-up text-purple-400 mr-1"></i>Drag to reorder</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+
+        <!-- ════════════════════════════════════════════════════════════
+             EDIT TAB PANEL
+             ════════════════════════════════════════════════════════════ -->
+        <div class="pdf-tab-panel hidden flex flex-1 min-w-0 overflow-hidden" data-tab-panel="edit">
+
+            <!-- Workspace -->
+            <div class="pdf-workspace relative flex-1 overflow-y-auto p-5 flex flex-col gap-4 min-w-0 custom-scrollbar">
+
+                <!-- Loading overlay -->
+                <div id="edit-loading" class="pdf-loading-overlay absolute inset-0 bg-zinc-900/90 hidden items-center justify-center z-20" style="display: none;">
+                    <div class="pdf-loading-content flex flex-col items-center gap-2">
+                        <i class="ph ph-spinner-gap animate-spin text-4xl text-amber-500"></i>
+                        <p id="edit-loading-text" class="text-zinc-300 mt-3">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Stats strip -->
+                <div class="pdf-stats-strip flex items-center gap-4 py-2 px-3 bg-zinc-950 border border-zinc-700/50 rounded-lg shrink-0">
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-file-pdf text-amber-500 text-[0.95rem]"></i><span id="edit-filename"
+                            class="truncate max-w-[200px]">No file loaded</span></span>
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-stack text-amber-500 text-[0.95rem]"></i><strong id="edit-page-count">—</strong></span>
+                    <span class="pdf-stat flex items-center gap-1.5 text-[0.78rem] text-zinc-400"><i class="ph ph-check-square text-amber-500 text-[0.95rem]"></i><strong id="edit-sel-count">0
+                            selected</strong></span>
+                    <button id="edit-clear-btn"
+                        class="ml-auto hidden text-xs text-zinc-500 hover:text-red-400 flex items-center gap-1 transition-colors">
+                        <i class="ph ph-x text-sm"></i> Close
+                    </button>
+                </div>
+
+                <!-- Empty state -->
+                <div id="edit-empty" class="pdf-empty-state flex-1 flex flex-col items-center justify-center gap-3 text-zinc-500 border-2 border-dashed border-zinc-700/50 rounded-2xl p-12 text-center transition-colors min-h-[280px]">
+                    <i class="ph ph-pencil-simple text-5xl"></i>
+                    <p class="text-lg font-semibold text-zinc-400">Load a PDF to edit</p>
+                    <p class="text-sm">Use <strong class="text-amber-500">Load PDF</strong> in the sidebar</p>
+                    <p class="text-xs text-zinc-600">Rotate, delete, reorder, or extract pages from any PDF</p>
+                </div>
+
+                <!-- Page grid -->
+                <div id="edit-panel" class="hidden flex-1 flex flex-col gap-3 min-h-0">
+
+                    <!-- Select toolbar -->
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button id="edit-select-all"
+                            class="text-xs px-3 py-1.5 rounded-md border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
+                            Select All
+                        </button>
+                        <button id="edit-deselect"
+                            class="text-xs px-3 py-1.5 rounded-md border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors">
+                            Deselect All
+                        </button>
+                        <span class="text-xs text-zinc-600 ml-1">• Ctrl+click for multi-select • Drag to reorder</span>
+                    </div>
+
+                    <div id="edit-page-grid" class="pdf-page-grid flex flex-wrap gap-2.5 p-1 content-start flex-1 overflow-y-auto custom-scrollbar"></div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="pdf-sidebar w-[15.5rem] shrink-0 border-l border-zinc-700/60 bg-zinc-900/40 overflow-y-auto flex flex-col gap-0 custom-scrollbar">
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Load</p>
+                    <button id="edit-load-btn" class="pdf-action-btn primary">
+                        <i class="ph ph-folder-open text-base"></i> Load PDF…
+                    </button>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Page Actions</p>
+                    <button id="edit-delete-sel" class="pdf-action-btn danger" disabled>
+                        <i class="ph ph-trash text-base"></i> Delete Selected
+                    </button>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Rotate Selected</p>
+                    <div class="grid grid-cols-3 gap-1.5 mb-1">
+                        <button id="edit-rotate-ccw"
+                            class="pdf-action-btn text-center flex-col items-center py-2 gap-0.5 text-[0.7rem] mb-0" disabled>
+                            <i class="ph ph-arrow-counter-clockwise text-base"></i>
+                            <span>−90°</span>
+                        </button>
+                        <button id="edit-rotate-180"
+                            class="pdf-action-btn text-center flex-col items-center py-2 gap-0.5 text-[0.7rem] mb-0" disabled>
+                            <i class="ph ph-arrows-clockwise text-base"></i>
+                            <span>180°</span>
+                        </button>
+                        <button id="edit-rotate-cw"
+                            class="pdf-action-btn text-center flex-col items-center py-2 gap-0.5 text-[0.7rem] mb-0" disabled>
+                            <i class="ph ph-arrow-clockwise text-base"></i>
+                            <span>+90°</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Output</p>
+                    <button id="edit-extract" class="pdf-action-btn" disabled>
+                        <i class="ph ph-export text-base"></i> Extract Selected
+                    </button>
+                    <button id="edit-save" class="pdf-action-btn primary" disabled>
+                        <i class="ph ph-floppy-disk text-base"></i> Save Edited PDF
+                    </button>
+                </div>
+
+                <div class="pdf-sidebar-section py-4 px-4 border-b border-zinc-700/50">
+                    <p class="pdf-sidebar-title text-[0.68rem] font-semibold text-zinc-500 uppercase tracking-widest mb-2.5">Tips</p>
+                    <ul class="text-xs text-zinc-500 space-y-1.5 leading-relaxed">
+                        <li><i class="ph ph-hand-tap text-amber-500 mr-1"></i>Click page to select</li>
+                        <li><i class="ph ph-arrows-down-up text-purple-400 mr-1"></i>Drag to reorder pages</li>
+                        <li><i class="ph ph-arrow-clockwise text-cyan-400 mr-1"></i>Rotation applied on save</li>
+                        <li><i class="ph ph-export text-pink-400 mr-1"></i>Extract = new PDF of selection</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+    </div><!-- end pdf-body -->
+</div><!-- end pdf-suite-root -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     MODULE SCRIPTS (inline — loaded after DOM is ready)
+     ═══════════════════════════════════════════════════════════════════ -->
+<script src="js/tools/pdf-suite/pdf-suite.js"></script>
+<script src="js/tools/pdf-suite/pdf-merge.js"></script>
+<script src="js/tools/pdf-suite/pdf-split.js"></script>
+<script src="js/tools/pdf-suite/pdf-edit.js"></script>
+<script>
+    // Slight defer so CDN scripts parse fully before our modules run
+    requestAnimationFrame(() => {
+        if (window.PdfSuite) {
+            PdfSuite.init();
+        }
+    });
+</script>

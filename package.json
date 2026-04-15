@@ -1,0 +1,33 @@
+{
+  "name": "ogmadesk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "concurrently -k -i --prefix none \"npx @tailwindcss/cli -i ./src/css/input.css -o ./src/css/output.css --watch\" \"tauri dev\"",
+    "build:css": "npx @tailwindcss/cli -i ./src/css/input.css -o ./src/css/output.css",
+    "build": "npm run build:css && tauri build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "@tauri-apps/api": "^2.10.1",
+    "@tauri-apps/cli": "^2.10.1",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.2.2"
+  },
+  "dependencies": {
+    "@phosphor-icons/web": "^2.1.2",
+    "@tauri-apps/plugin-dialog": "^2.6.0",
+    "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-http": "^2.5.7",
+    "@tauri-apps/plugin-store": "^2.4.2",
+    "apexcharts": "^5.10.4",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.6.205"
+  }
+}

@@ -1,0 +1,67 @@
+<!-- =====================================================================
+     Kanban Notes — Main Fragment
+     Loaded dynamically by app.js into #main-content.
+     ===================================================================== -->
+
+<!-- Local Libraries -->
+<script src="/lib/sortable.min.js"></script>
+
+<!-- Scoped Styles -->
+<!-- Styles migrated to input.css -->
+
+<!-- =====================================================================
+     ROOT CONTAINER
+     ===================================================================== -->
+<div id="kn-root" class="flex flex-col h-full gap-0 animate-[fade-enter_300ms_ease_forwards]">
+
+    <!-- ── Top Toolbar ──────────────────────────────────────────────────── -->
+    <div class="kn-toolbar">
+        <!-- Board Name -->
+        <div class="kn-toolbar-group">
+            <input type="text" id="kn-board-name" class="bg-zinc-900 border border-zinc-700 text-zinc-200 text-sm px-3 py-1.5 rounded-lg focus:outline-none focus:border-amber-500 w-48" placeholder="Board name...">
+        </div>
+
+        <!-- Board Selector -->
+        <div class="kn-toolbar-group">
+            <select id="kn-board-select" class="bg-zinc-900 border border-zinc-700 text-zinc-200 text-sm px-3 py-1.5 rounded-lg focus:outline-none focus:border-amber-500">
+            </select>
+        </div>
+
+        <!-- Board Actions -->
+        <div class="kn-toolbar-group">
+            <button class="kn-btn" id="kn-btn-new-board" title="Create New Board">
+                <i class="ph ph-plus text-base"></i> New Board
+            </button>
+            <button class="kn-btn danger" id="kn-btn-delete-board" title="Delete Current Board">
+                <i class="ph ph-trash text-base"></i> Delete
+            </button>
+        </div>
+
+        <div class="kn-toolbar-group ml-auto">
+            <button class="kn-btn primary" id="kn-btn-new" title="Add New Note">
+                <i class="ph ph-plus text-base"></i> New Note
+            </button>
+            <button class="kn-btn danger" id="kn-btn-clear" title="Clear All Notes">
+                <i class="ph ph-trash text-base"></i> Clear Board
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Board ───────────────────────────────────────────────────────── -->
+    <div class="kn-board-container">
+        <div class="kn-board" id="kn-board">
+            <!-- Columns rendered by JS -->
+        </div>
+    </div>
+
+</div>
+
+<!-- MODULE SCRIPTS -->
+<script src="js/tools/kanban-notes/kanban-notes.js"></script>
+<script>
+    requestAnimationFrame(() => {
+        if (window.KanbanNotes) {
+            window.KanbanNotes.init();
+        }
+    });
+</script>

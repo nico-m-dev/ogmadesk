@@ -1,0 +1,356 @@
+<div class="max-w-4xl mx-auto space-y-8 animate-[fade-enter_300ms_ease_forwards]">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-white mb-1">Welcome back.</h1>
+            <p class="text-zinc-400">Everything here stays on your device. 100% offline.</p>
+        </div>
+    </div>
+
+    <!-- Mode Indicator Banner -->
+    <div id="mode-indicator" class="glass-panel border px-4 py-3 flex items-center gap-3 animate-[fade-enter_300ms_ease_forwards]">
+        <i id="mode-indicator-icon" class="ph text-xl"></i>
+        <div class="flex-1">
+            <span id="mode-indicator-title" class="font-semibold text-sm"></span>
+            <p id="mode-indicator-desc" class="text-xs text-zinc-400 mt-0.5"></p>
+        </div>
+    </div>
+
+    <!-- Quick Actions Grid -->
+    <div class="space-y-4">
+        <h2 class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Quick Tools</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            <!-- Tool Card: PDF Suite -->
+            <a href="#" onclick="document.querySelector('[data-page=\'pdf-suite\']').click(); return false;"
+                class="glass-panel p-5 hover:border-amber-500/50 hover:bg-zinc-800 transition-all group cursor-pointer block">
+                <div
+                    class="w-10 h-10 rounded-md bg-rose-500/10 text-rose-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="ph-fill ph-file-pdf text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-white mb-1">PDF Suite</h3>
+                <p class="text-sm text-zinc-400 line-clamp-2">Merge, split, and edit PDFs locally without uploading
+                    sensitive data.</p>
+            </a>
+
+            <!-- Tool Card: File Manager (Workspace Only) -->
+            <a href="#" data-workspace-only="true"
+                onclick="document.querySelector('[data-page=\'file-manager\']').click(); return false;"
+                class="glass-panel p-5 hover:border-amber-500/50 hover:bg-zinc-800 transition-all group cursor-pointer block">
+                <div
+                    class="w-10 h-10 rounded-md bg-blue-500/10 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="ph-fill ph-folder text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-white mb-1">File Manager</h3>
+                <p class="text-sm text-zinc-400 line-clamp-2">Batch rename, organize, and manage files securely within
+                    your workspace.</p>
+            </a>
+
+            <!-- Tool Card: File Compare -->
+            <a href="#" onclick="document.querySelector('[data-page=\'file-compare\']').click(); return false;"
+                class="glass-panel p-5 hover:border-amber-500/50 hover:bg-zinc-800 transition-all group cursor-pointer block">
+                <div
+                    class="w-10 h-10 rounded-md bg-amber-500/10 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="ph-fill ph-copy text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-white mb-1">File Compare</h3>
+                <p class="text-sm text-zinc-400 line-clamp-2">Side-by-side file comparison to highlight differences
+                    between two files.</p>
+            </a>
+
+            <!-- Tool Card: Markdown -->
+            <a href="#" onclick="document.querySelector('[data-page=\'markdown-editor\']').click(); return false;"
+                class="glass-panel p-5 hover:border-amber-500/50 hover:bg-zinc-800 transition-all group cursor-pointer block">
+                <div
+                    class="w-10 h-10 rounded-md bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="ph-fill ph-markdown-logo text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-white mb-1">Markdown Editor</h3>
+                <p class="text-sm text-zinc-400 line-clamp-2">Distraction-free environment for drafting documents with
+                    live preview.</p>
+            </a>
+
+            <!-- Tool Card: Kanban (Workspace Only) -->
+            <a href="#" data-workspace-only="true"
+                onclick="document.querySelector('[data-page=\'kanban-notes\']').click(); return false;"
+                class="glass-panel p-5 hover:border-amber-500/50 hover:bg-zinc-800 transition-all group cursor-pointer block">
+                <div
+                    class="w-10 h-10 rounded-md bg-amber-500/10 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="ph-fill ph-kanban text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-white mb-1">Kanban Notes</h3>
+                <p class="text-sm text-zinc-400 line-clamp-2">Organize tasks and fast notes. Data stored purely in
+                    local JSON files.</p>
+            </a>
+
+            <!-- Tool Card: Chart Builder -->
+            <a href="#" onclick="document.querySelector('[data-page=\'chart-builder\']').click(); return false;"
+                class="glass-panel p-5 hover:border-amber-500/50 hover:bg-zinc-800 transition-all group cursor-pointer block">
+                <div
+                    class="w-10 h-10 rounded-md bg-purple-500/10 text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="ph-fill ph-chart-bar text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-white mb-1">Chart Builder</h3>
+                <p class="text-sm text-zinc-400 line-clamp-2">Generate beautiful offline charts without sending data to
+                    third parties.</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Saved Workspaces Section (Now at the top) -->
+    <div id="saved-workspaces-section" class="space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-white flex items-center">
+                <i class="ph ph-hard-drives mr-2 text-amber-500"></i>
+                Saved Workspaces
+            </h2>
+
+            <button id="btn-toggle-new-ws"
+                class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold px-3 py-1.5 rounded-lg transition-all active:scale-95 flex items-center text-sm">
+                <i class="ph ph-plus font-bold mr-2 text-base"></i>
+                New Workspace
+            </button>
+        </div>
+
+        <!-- Inline New Workspace Form -->
+        <div id="inline-ws-form" class="hidden animate-[fade-enter_300ms_ease_out]">
+            <div class="glass-panel p-5 border-amber-500/30 bg-zinc-900/50 space-y-4 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-2">
+                    <button id="btn-close-ws-form" class="text-zinc-500 hover:text-white transition-colors">
+                        <i class="ph ph-x text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-end gap-4">
+                    <div class="flex-1 space-y-1">
+                        <label class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Workspace
+                            Name</label>
+                        <input type="text" id="ws-inline-name" placeholder="e.g. My Private Data"
+                            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-500 transition-colors text-white">
+                    </div>
+
+                    <div class="flex-1 space-y-1">
+                        <label
+                            class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Location</label>
+                        <button id="ws-inline-select-folder"
+                            class="w-full bg-zinc-950 border border-zinc-800 hover:border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-500 flex items-center transition-all truncate text-left">
+                            <i class="ph ph-folder text-lg mr-2 shrink-0"></i>
+                            <span id="ws-inline-selected-path" class="truncate italic">No folder selected...</span>
+                        </button>
+                    </div>
+
+                    <button id="ws-inline-create-btn"
+                        class="bg-amber-600 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold px-6 py-2 rounded-lg transition-all shadow-lg shadow-amber-500/20 sm:w-auto w-full"
+                        disabled>
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="saved-workspaces-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Populated via JS -->
+            <div
+                class="col-span-full py-8 text-center border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-sm">
+                No saved workspaces found.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // New Workspace Toggle Logic
+            const toggleBtn = document.getElementById('btn-toggle-new-ws');
+            const inlineForm = document.getElementById('inline-ws-form');
+            const closeFormBtn = document.getElementById('btn-close-ws-form');
+
+            const wsNameInput = document.getElementById('ws-inline-name');
+            const wsPathBtn = document.getElementById('ws-inline-select-folder');
+            const wsPathLabel = document.getElementById('ws-inline-selected-path');
+            const wsCreateBtn = document.getElementById('ws-inline-create-btn');
+
+            let selectedPath = null;
+
+            if (toggleBtn && inlineForm) {
+                toggleBtn.addEventListener('click', () => {
+                    inlineForm.classList.toggle('hidden');
+                    if (!inlineForm.classList.contains('hidden')) {
+                        wsNameInput.focus();
+                    }
+                });
+            }
+
+            if (closeFormBtn && inlineForm) {
+                closeFormBtn.addEventListener('click', () => {
+                    inlineForm.classList.add('hidden');
+                });
+            }
+
+            function updateInlineUI() {
+                const name = wsNameInput.value.trim();
+                wsCreateBtn.disabled = !(name && selectedPath);
+            }
+
+            wsNameInput.addEventListener('input', updateInlineUI);
+
+            if (wsPathBtn) {
+                wsPathBtn.addEventListener('click', async () => {
+                    const selected = await window.TauriBridge.dialog.open({
+                        directory: true,
+                        multiple: false,
+                        title: "Select Parent Folder for Workspace"
+                    });
+
+                    if (selected) {
+                        selectedPath = selected;
+                        wsPathLabel.textContent = selected;
+                        wsPathLabel.classList.remove('italic');
+                        wsPathLabel.classList.add('text-zinc-200');
+                        updateInlineUI();
+                    }
+                });
+            }
+
+            if (wsCreateBtn) {
+                wsCreateBtn.addEventListener('click', async () => {
+                    const name = wsNameInput.value.trim();
+                    if (name && selectedPath) {
+                        await window.WorkspaceManager.createWorkspace(name, selectedPath);
+                        // WorkspaceManager will trigger a reload/navigation
+                    }
+                });
+            }
+
+            // --- Mode Indicator ---
+            const modeIndicator = document.getElementById('mode-indicator');
+            const modeIcon = document.getElementById('mode-indicator-icon');
+            const modeTitle = document.getElementById('mode-indicator-title');
+            const modeDesc = document.getElementById('mode-indicator-desc');
+
+            function updateModeIndicator() {
+                const isWorkspaceActive = window.WorkspaceManager && window.WorkspaceManager.current;
+
+                if (isWorkspaceActive) {
+                    modeIndicator.classList.remove('border-zinc-800', 'bg-zinc-900/30');
+                    modeIndicator.classList.add('border-amber-500/30', 'bg-amber-500/5');
+                    modeIcon.className = 'ph text-xl text-amber-400 ph-folder-notch';
+                    modeTitle.className = 'font-semibold text-sm text-amber-400';
+                    modeTitle.textContent = window.WorkspaceManager.current.name;
+                    modeDesc.textContent = 'Workspace Mode — Full access to all tools and features';
+                } else {
+                    modeIndicator.classList.remove('border-amber-500/30', 'bg-amber-500/5');
+                    modeIndicator.classList.add('border-zinc-800', 'bg-zinc-900/30');
+                    modeIcon.className = 'ph text-xl text-amber-400 ph-lightning';
+                    modeTitle.className = 'font-semibold text-sm text-zinc-300';
+                    modeTitle.textContent = 'Quick Mode';
+                    modeDesc.textContent = 'Basic tools — Create a workspace for more features';
+                }
+            }
+
+            if (modeIndicator && modeTitle) {
+                updateModeIndicator();
+            }
+
+            // --- Tool Filtering Logic ---
+            function filterToolsByMode() {
+                const isWorkspaceActive = window.WorkspaceManager && window.WorkspaceManager.current;
+                const workspaceOnlyCards = document.querySelectorAll('[data-workspace-only="true"]');
+
+                workspaceOnlyCards.forEach(card => {
+                    if (isWorkspaceActive) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Run initial filter
+            filterToolsByMode();
+
+            // Render Saved Workspaces
+            const listContainer = document.getElementById('saved-workspaces-list');
+            if (listContainer && window.WorkspaceManager) {
+                const workspaces = window.WorkspaceManager.recent;
+
+                if (workspaces.length > 0) {
+                    listContainer.innerHTML = '';
+                    workspaces.forEach(ws => {
+                        const card = document.createElement('div');
+                        card.className = `glass-panel p-4 hover:border-amber-500/30 hover:bg-zinc-800/50 transition-all group flex items-center ${!ws.exists ? 'border-red-500/30' : 'cursor-pointer'}`;
+
+                        let statusContent = '';
+                        if (!ws.exists) {
+                            statusContent = `
+                                <div class="flex flex-col items-end space-y-1 ml-auto">
+                                    <span class="text-[10px] bg-red-500/10 text-red-500 px-2 py-0.5 rounded border border-red-500/20 font-bold uppercase mb-1">Folder Not Found</span>
+                                    <div class="flex space-x-2">
+                                        <button class="fix-btn text-[10px] bg-amber-600 hover:bg-amber-500 text-white px-2 py-1 rounded transition-colors font-bold uppercase">Fix Path</button>
+                                        <button class="remove-btn text-[10px] bg-zinc-700 hover:bg-red-600 text-white px-2 py-1 rounded transition-colors font-bold uppercase">Remove</button>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            statusContent = `<i class="ph ph-arrow-right text-zinc-600 group-hover:text-amber-400 ml-auto transition-colors"></i>`;
+                        }
+
+                        card.innerHTML = `
+                            <div class="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center mr-4 group-hover:bg-amber-500/10 group-hover:border-amber-500/20 transition-all">
+                                <i class="ph ph-folder ${!ws.exists ? 'text-red-500/50' : 'text-zinc-400 group-hover:text-amber-400'} transition-colors"></i>
+                            </div>
+                            <div class="flex-1 min-w-0 pr-2">
+                                <div class="font-medium ${!ws.exists ? 'text-zinc-500' : 'text-zinc-200'} truncate">${ws.name}</div>
+                                <div class="text-xs text-zinc-500 truncate mt-0.5">${ws.path}</div>
+                            </div>
+                            ${statusContent}
+                        `;
+
+                        if (ws.exists) {
+                            card.addEventListener('click', (e) => {
+                                // Don't trigger if clicking buttons (though buttons are only visible when !exists)
+                                if (e.target.closest('button')) return;
+                                window.WorkspaceManager.openWorkspace(ws.path);
+                            });
+                        } else {
+                            const fixBtn = card.querySelector('.fix-btn');
+                            const removeBtn = card.querySelector('.remove-btn');
+
+                            if (fixBtn) {
+                                fixBtn.addEventListener('click', async (e) => {
+                                    e.stopPropagation();
+                                    const selected = await window.TauriBridge.dialog.open({
+                                        directory: true,
+                                        multiple: false,
+                                        title: `Find Folder for ${ws.name}`
+                                    });
+                                    if (selected) {
+                                        await window.WorkspaceManager.updateWorkspacePath(ws.path, selected);
+                                        // Page will reload via WorkspaceManager
+                                    }
+                                });
+                            }
+
+                            if (removeBtn) {
+                                removeBtn.addEventListener('click', async (e) => {
+                                    e.stopPropagation();
+                                    const confirmed = await window.TauriBridge.dialog.ask(
+                                        `Remove "${ws.name}" from your saved workspaces list?`,
+                                        { title: "Remove Workspace", kind: "warning" }
+                                    );
+                                    if (confirmed) {
+                                        await window.WorkspaceManager.removeWorkspace(ws.path);
+                                        card.remove();
+                                        if (listContainer.children.length === 0) {
+                                            listContainer.innerHTML = '<div class="col-span-full py-8 text-center border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-sm">No saved workspaces found.</div>';
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        listContainer.appendChild(card);
+                    });
+                }
+            }
+        })();
+    </script>
+</div>

@@ -1,0 +1,131 @@
+<!-- =====================================================================
+     File Compare — Main Fragment
+     Loaded dynamically by app.js into #main-content.
+     ===================================================================== -->
+
+<!-- Local Libraries -->
+<script src="/lib/diff/diff.min.js"></script>
+
+<!-- Scoped Styles -->
+<!-- Styles migrated to input.css -->
+
+<!-- =====================================================================
+     ROOT CONTAINER
+     ===================================================================== -->
+<div id="fc-root" class="flex flex-col h-full gap-0 animate-[fade-enter_300ms_ease_forwards]">
+
+    <!-- ── Top Toolbar ──────────────────────────────────────────────────── -->
+    <div class="fc-toolbar">
+        <!-- File Selection -->
+        <div class="fc-toolbar-group">
+            <button class="fc-btn primary" id="fc-btn-file1" title="Select File 1 (Original)">
+                <i class="ph ph-file-arrow-left text-base"></i> File 1
+            </button>
+            <button class="fc-btn primary" id="fc-btn-file2" title="Select File 2 (Modified)">
+                <i class="ph ph-file-arrow-right text-base"></i> File 2
+            </button>
+        </div>
+
+        <!-- Actions -->
+        <div class="fc-toolbar-group">
+            <button class="fc-btn fc-btn-icon" id="fc-swap-btn" title="Swap Files" disabled>
+                <i class="ph ph-arrows-left-right text-base" id="fc-swap-icon"></i>
+            </button>
+            <button class="fc-btn fc-btn-icon" id="fc-clear-btn" title="Clear All" disabled>
+                <i class="ph ph-trash text-base"></i>
+            </button>
+        </div>
+
+        <!-- View Options -->
+        <div class="fc-toolbar-group ml-auto">
+            <button class="fc-btn active" id="fc-sync-btn" title="Toggle Scroll Sync">
+                <i class="ph ph-link text-base"></i> Sync
+            </button>
+        </div>
+
+        <!-- Save -->
+        <div class="fc-toolbar-group">
+            <button class="fc-btn primary" id="fc-save-btn" title="Save Diff" disabled>
+                <i class="ph ph-floppy-disk text-base"></i> Save Diff
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Body ─────────────────────────────────────────────────────── -->
+    <div class="fc-body">
+
+        <div class="fc-split-view">
+
+            <!-- Left Pane (File 1 / Original) -->
+            <div class="fc-pane" id="fc-left-pane-container">
+                <div class="fc-pane-header">
+                    <i class="ph ph-file text-amber-500 text-lg"></i>
+                    <div id="fc-file1-info">
+                        <span class="text-zinc-500 italic">No file selected</span>
+                    </div>
+                </div>
+                <div class="fc-pane-content" id="fc-left-pane">
+                    <!-- Diff content or drop zone -->
+                    <div id="fc-left-drop" class="fc-drop-zone">
+                        <i class="ph ph-upload-simple"></i>
+                        <p class="font-medium text-zinc-400">Drop File 1 here</p>
+                        <span>or click "File 1" button above</span>
+                    </div>
+                    <div id="fc-left-content" class="hidden"></div>
+                </div>
+            </div>
+
+            <div class="fc-pane-divider"></div>
+
+            <!-- Right Pane (File 2 / Modified) -->
+            <div class="fc-pane" id="fc-right-pane-container">
+                <div class="fc-pane-header">
+                    <i class="ph ph-file text-amber-500 text-lg"></i>
+                    <div id="fc-file2-info">
+                        <span class="text-zinc-500 italic">No file selected</span>
+                    </div>
+                </div>
+                <div class="fc-pane-content" id="fc-right-pane">
+                    <!-- Diff content or drop zone -->
+                    <div id="fc-right-drop" class="fc-drop-zone">
+                        <i class="ph ph-upload-simple"></i>
+                        <p class="font-medium text-zinc-400">Drop File 2 here</p>
+                        <span>or click "File 2" button above</span>
+                    </div>
+                    <div id="fc-right-content" class="hidden"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ── Summary Bar ──────────────────────────────────────────────────── -->
+    <div class="fc-summary">
+        <div class="fc-summary-stat added">
+            <i class="ph ph-plus-circle"></i>
+            <span>Added: <strong id="fc-added-count">0</strong></span>
+        </div>
+        <div class="fc-summary-stat removed">
+            <i class="ph ph-minus-circle"></i>
+            <span>Removed: <strong id="fc-removed-count">0</strong></span>
+        </div>
+        <div class="fc-summary-stat">
+            <i class="ph ph-chart-pie text-amber-500"></i>
+            <span>Similarity: <strong id="fc-similarity">—</strong></span>
+        </div>
+        <div class="fc-similarity-bar-container">
+            <div class="fc-similarity-bar" id="fc-similarity-bar" style="width: 0%"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODULE SCRIPTS -->
+<script src="js/tools/file-compare/file-compare.js"></script>
+<script>
+    // Initialize immediately after script loads
+    if (window.FileCompare) {
+        window.FileCompare.init();
+    }
+</script>
