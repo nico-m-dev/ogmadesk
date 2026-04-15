@@ -10,8 +10,8 @@
     "build": "npm run build:css && tauri build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Nico M",
+  "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.2",
