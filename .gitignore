@@ -2,3 +2,5 @@ node_modules/
 .opencode/
 AGENTS.md
 .tauri/
+keys/
+keys.pub
