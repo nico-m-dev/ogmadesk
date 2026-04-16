@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Voor je JavaScript / npm dependencies (frontend + Tauri)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"        # of "monthly" als je minder PRs wilt
+    open-pull-requests-limit: 5
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
+
+  # Voor je Rust dependencies (in src-tauri)
+  - package-ecosystem: "cargo"
+    directory: "/src-tauri"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
