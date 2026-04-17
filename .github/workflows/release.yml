@@ -6,7 +6,6 @@ on:
 
 permissions:
   contents: write
-  releases: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
