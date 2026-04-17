@@ -13,37 +13,23 @@ env:
 
 jobs:
   publish-windows:
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [windows-latest]
-
-    runs-on: ${{ matrix.platform }}
-
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: 24
-
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
-
       - name: install frontend dependencies
         run: npm ci
-
       - name: build tauri app
-        run: npm run tauri build
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            src-tauri/target/release/bundle/msi/*.msi
-            src-tauri/target/release/bundle/nsis/*-setup.exe
-          draft: true
-          prerelease: false
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'OgmaDesk ${{ github.ref_name }}'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
