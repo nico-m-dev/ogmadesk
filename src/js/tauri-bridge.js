@@ -276,15 +276,32 @@
                 try {
                     if (isTauri() && window.__TAURI__.updater) {
                         const { check } = window.__TAURI__.updater;
-                        return await check();
+                        const update = await check();
+                        if (update) {
+                            TauriBridge._updateInfo = {
+                                available: true,
+                                version: update.version,
+                                currentVersion: update.currentVersion
+                            };
+                        } else {
+                            TauriBridge._updateInfo = { available: false, version: null, currentVersion: null };
+                        }
+                        return update;
                     }
                 } catch (e) {
                     console.warn('[Tauri] updater.check error:', e.message);
                 }
+                TauriBridge._updateInfo = { available: false, version: null, currentVersion: null };
                 return null;
+            },
+            getUpdateInfo() {
+                return TauriBridge._updateInfo || { available: false, version: null, currentVersion: null };
             }
         }
     };
+
+    // Initialize update info
+    TauriBridge._updateInfo = { available: false, version: null, currentVersion: null };
 
     // Expose globally
     window.TauriBridge = TauriBridge;

@@ -13,6 +13,7 @@
                 <div>
                     <p class="text-sm font-medium text-zinc-200">Current Version</p>
                     <p class="text-xs text-zinc-400" id="app-version">Loading...</p>
+                    <p id="update-available" class="text-xs text-emerald-400 mt-1 hidden">New Version Available: <span id="new-version"></span></p>
                 </div>
                 <div class="flex space-x-2">
                     <button id="btn-check-updates" class="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/20 rounded-md text-sm font-medium transition-colors">
@@ -46,41 +47,82 @@
 <script>
     (async function() {
         const btn = document.getElementById('btn-check-updates');
+        const updateText = document.getElementById('update-available');
+        const newVersionSpan = document.getElementById('new-version');
+        let currentUpdate = null;
+
+        function updateUI() {
+            const info = window.TauriBridge?.updater?.getUpdateInfo();
+            if (info?.available && info.version) {
+                newVersionSpan.textContent = 'v' + info.version;
+                updateText.classList.remove('hidden');
+                btn.textContent = 'Install Update';
+                currentUpdate = window.TauriBridge?.updater?.check();
+            } else {
+                updateText.classList.add('hidden');
+                btn.textContent = 'Check for Updates';
+                currentUpdate = null;
+            }
+        }
+
         if (btn) {
             btn.addEventListener('click', async () => {
-                btn.disabled = true;
-                btn.textContent = 'Checking...';
+                const info = window.TauriBridge?.updater?.getUpdateInfo();
                 
-                try {
-                    const update = await window.TauriBridge?.updater?.check();
+                if (info?.available) {
+                    btn.disabled = true;
+                    btn.textContent = 'Installing...';
                     
-                    if (update) {
-                        if (window.App?.showToast) {
-                            window.App.showToast(
-                                `Update available: v${update.version}. Downloading...`, 
-                                'info'
-                            );
+                    try {
+                        const update = await window.TauriBridge?.updater?.check();
+                        if (update) {
+                            if (window.App?.showToast) {
+                                window.App.showToast('Downloading and installing update...', 'info');
+                            }
+                            await update.downloadAndInstall();
                         }
-                        await update.downloadAndInstall();
-                    } else {
+                    } catch (e) {
+                        console.error('Update install failed:', e);
                         if (window.App?.showToast) {
-                            window.App.showToast('You are currently using the latest version.', 'success');
+                            window.App.showToast('Failed to install update: ' + e.message, 'error');
+                        }
+                        btn.disabled = false;
+                        btn.textContent = 'Install Update';
+                    }
+                } else {
+                    btn.disabled = true;
+                    btn.textContent = 'Checking...';
+                    
+                    try {
+                        const update = await window.TauriBridge?.updater?.check();
+                        
+                        updateUI();
+                        
+                        if (update) {
+                            if (window.App?.showToast) {
+                                window.App.showToast('Update available: v' + update.version, 'info');
+                            }
                         } else {
-                            alert('You are currently using the latest version.');
+                            if (window.App?.showToast) {
+                                window.App.showToast('You are currently using the latest version.', 'success');
+                            }
                         }
+                        
+                        window.App?.updateBadge && window.App.updateBadge();
+                    } catch (e) {
+                        console.error('Update check failed:', e);
+                        if (window.App?.showToast) {
+                            window.App.showToast('Failed to check for updates: ' + e.message, 'error');
+                        }
+                    } finally {
+                        btn.disabled = false;
+                        const currInfo = window.TauriBridge?.updater?.getUpdateInfo();
+                        btn.textContent = currInfo?.available ? 'Install Update' : 'Check for Updates';
                     }
-                } catch (e) {
-                    console.error('Update check failed:', e);
-                    if (window.App?.showToast) {
-                        window.App.showToast('Failed to check for updates: ' + e.message, 'error');
-                    } else {
-                        alert('Failed to check for updates: ' + e.message);
-                    }
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = 'Check for Updates';
                 }
             });
         }
+
+        updateUI();
     })();
 </script>

@@ -27,6 +27,28 @@ const App = {
 
         // Initialize Window Size Persistence
         await this.initWindowSize();
+
+        // Check for updates in background
+        this.checkForUpdates();
+    },
+
+    async checkForUpdates() {
+        try {
+            await window.TauriBridge?.updater?.check();
+            this.updateBadge();
+        } catch (e) {
+            console.warn('[App] Update check failed:', e.message);
+        }
+    },
+
+    updateBadge() {
+        const badge = document.getElementById('settings-update-badge');
+        const info = window.TauriBridge?.updater?.getUpdateInfo();
+        if (badge && info?.available) {
+            badge.classList.remove('hidden');
+        } else if (badge) {
+            badge.classList.add('hidden');
+        }
     },
 
     async setVersionInUI() {
