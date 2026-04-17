@@ -259,8 +259,14 @@
 
         // App info
         async getVersion() {
-            // Return hardcoded version - will be updated on release
-            // The actual version API requires build, not available in dev
+            try {
+                if (isTauri() && window.__TAURI__.app) {
+                    const { getVersion } = window.__TAURI__.app;
+                    return await getVersion();
+                }
+            } catch (e) {
+                console.warn('[Tauri] getVersion error:', e.message);
+            }
             return '1.0.0';
         },
 
