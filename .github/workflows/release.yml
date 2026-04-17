@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  releases: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
@@ -39,7 +40,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          version: ${{ trimPrefix(github.ref_name, 'v') }}
           tagName: ${{ github.ref_name }}
           releaseName: 'OgmaDesk ${{ github.ref_name }}'
           releaseBody: 'See the assets to download this version and install.'
