@@ -29,9 +29,9 @@ var ChartTypes = (() => {
                 grid: { show: true },
                 backgroundColor: '#f5f5f5',
                 textColor: '#373d3f',
-                gridColor: '#e2e8f0'
-            }
-        },
+                gridColor: '#e2e8f0',
+                tooltip: { theme: false } }
+            },
         bar: {
             id: 'bar',
             name: 'Bar',
@@ -50,7 +50,8 @@ var ChartTypes = (() => {
                 grid: { show: true },
                 backgroundColor: '#f5f5f5',
                 textColor: '#373d3f',
-                gridColor: '#e2e8f0'
+                gridColor: '#e2e8f0',
+                tooltip: { theme: false }
             }
         },
         pie: {

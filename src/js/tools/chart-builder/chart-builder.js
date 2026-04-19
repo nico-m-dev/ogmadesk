@@ -389,7 +389,8 @@ var ChartBuilder = (() => {
         opt.chart.type = type;
         opt.chart.id = 'cb-main-chart';
         opt.chart.animations = { enabled: true };
-        opt.chart.background = 'transparent'; // Use wrapper background for better clipping/aesthetics
+        opt.chart.background = 'transparent';
+        opt.chart.height = 500;
 
         // Set explicit text color (title, legend, axis labels)
         const textColor = options.textColor || '#373d3f';

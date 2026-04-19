@@ -1616,20 +1616,6 @@
     min-height: 0;
 }
 
-@media (max-width: 900px) {
-    .cb-chart-wrapper {
-        aspect-ratio: 4/3;
-        padding: 0.75rem;
-    }
-}
-
-@media (max-width: 600px) {
-    .cb-chart-wrapper {
-        aspect-ratio: 1/1;
-        padding: 0.5rem;
-    }
-}
-
 @utility cb-data-panel {
     flex-shrink: 0;
     display: flex;
@@ -1878,5 +1864,22 @@
 
 .cb-bg-color-hex:focus {
     color: var(--color-zinc-200);
+}
+
+/* ── Chart Builder Tooltip Styles ── */
+.apexcharts-tooltip {
+    background: #f3f3f3;
+    border: 1px solid #e5e7eb;
+    color: #1f2937;
+}
+
+.apexcharts-tooltip .apexcharts-tooltip-title {
+    background: #e5e7eb;
+    border-bottom: 1px solid #d1d5db;
+    color: #1f2937;
+}
+
+.apexcharts-tooltip-text-value {
+    color: #1f2937;
 }
 
