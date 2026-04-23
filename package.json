@@ -14,7 +14,7 @@
   "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
-    "@tailwindcss/cli": "^4.2.2",
+    "@tailwindcss/cli": "^4.2.4",
     "@tauri-apps/api": "^2.10.1",
     "@tauri-apps/cli": "^2.10.1",
     "concurrently": "^9.2.1",
